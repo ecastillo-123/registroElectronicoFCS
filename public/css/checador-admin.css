@@ -1,0 +1,171 @@
+/* ============================================================
+   Checador — Tema personalizado del panel
+   Degradados en el azul primario (#1D4ED8) para la barra lateral,
+   las tablas y los formularios. Se carga vía render hook en
+   App\Providers\Filament\AdminPanelProvider (STYLES_AFTER).
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1) BARRA LATERAL — degradado azul marino
+   ------------------------------------------------------------ */
+.fi-sidebar {
+    background-color: #0f2256;
+    background-image: linear-gradient(180deg, #0c1b47 0%, #16318a 55%, #1d4ed8 100%);
+}
+
+/* Cabecera del logo: transparente, sin borde inferior */
+.fi-body-has-topbar .fi-sidebar-header {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.fi-sidebar .fi-logo {
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+/* Etiquetas de grupo */
+.fi-sidebar .fi-sidebar-group-label {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.fi-sidebar .fi-sidebar-group-btn .fi-icon {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.fi-sidebar .fi-sidebar-group.fi-active .fi-sidebar-group-btn .fi-icon,
+.fi-sidebar .fi-sidebar-group.fi-active .fi-sidebar-group-dropdown-trigger-btn .fi-icon {
+    color: #ffffff;
+}
+
+/* Items de navegación */
+.fi-sidebar .fi-sidebar-item-btn {
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.fi-sidebar .fi-sidebar-item-btn .fi-icon {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.fi-sidebar .fi-sidebar-item-label {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.fi-sidebar .fi-sidebar-item-btn:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.fi-sidebar .fi-sidebar-item-btn:hover .fi-icon,
+.fi-sidebar .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
+    color: #ffffff;
+}
+
+/* Item con hijos activos: resaltado suave */
+.fi-sidebar .fi-sidebar-item.fi-sidebar-item-has-active-child-items > .fi-sidebar-item-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Item activo: píldora blanca */
+.fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background-color: #ffffff;
+    box-shadow: 0 10px 24px -10px rgba(8, 20, 60, 0.45);
+}
+
+.fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-icon,
+.fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-label {
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   2) BARRA SUPERIOR — acento sutil
+   ------------------------------------------------------------ */
+.fi-topbar {
+    border-bottom: 1px solid #dce7fb;
+}
+
+/* ------------------------------------------------------------
+   3) TABLAS — tinte azul suave
+   ------------------------------------------------------------ */
+html:not(.dark) .fi-ta-ctn {
+    background-image: linear-gradient(180deg, #ffffff 0%, #f4f8fe 100%);
+    border: 1px solid #dee9fb;
+    box-shadow: 0 1px 2px rgba(29, 78, 216, 0.05), 0 10px 30px -14px rgba(29, 78, 216, 0.18);
+}
+
+html:not(.dark) .fi-ta-header {
+    background-image: linear-gradient(90deg, #eaf2fe 0%, #dce8fb 100%);
+    border-bottom-color: #c4d9fb;
+}
+
+html:not(.dark) .fi-ta-header-heading {
+    color: #1e3a8a;
+}
+
+html:not(.dark) .fi-ta-header-description {
+    color: #4b6bb5;
+}
+
+/* Cabecera de columnas */
+html:not(.dark) .fi-ta-ctn .fi-ta-table thead {
+    background-color: rgba(219, 234, 254, 0.4);
+}
+
+html:not(.dark) .fi-ta-ctn .fi-ta-table thead .fi-ta-header-cell,
+html:not(.dark) .fi-ta-ctn .fi-ta-table thead .fi-ta-header-cell-sort-btn {
+    color: #1e40af;
+}
+
+/* Filas alternadas + hover */
+html:not(.dark) .fi-ta-ctn .fi-ta-table tbody tr.fi-ta-record:nth-child(even) {
+    background-color: #f2f7ff;
+}
+
+html:not(.dark) .fi-ta-ctn .fi-ta-table tbody tr.fi-ta-record:hover {
+    background-color: #e3edfc;
+}
+
+html.dark .fi-ta-ctn {
+    border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
+html.dark .fi-ta-ctn .fi-ta-table tbody tr.fi-ta-record:hover {
+    background-color: rgba(59, 130, 246, 0.16);
+}
+
+/* ------------------------------------------------------------
+   4) SECCIONES / TARJETAS — tinte azul suave
+   ------------------------------------------------------------ */
+html:not(.dark) .fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+    background-image: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+    border: 1px solid #dee9fb;
+    box-shadow: 0 1px 2px rgba(29, 78, 216, 0.05), 0 10px 30px -14px rgba(29, 78, 216, 0.16);
+}
+
+html:not(.dark) .fi-section:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-header {
+    background-image: linear-gradient(90deg, #eaf2fe 0%, #dce8fb 100%);
+    border-top-left-radius: var(--radius-xl);
+    border-top-right-radius: var(--radius-xl);
+}
+
+html:not(.dark) .fi-section-header-heading {
+    color: #1e3a8a;
+}
+
+html.dark .fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+    border: 1px solid rgba(59, 130, 246, 0.28);
+}
+
+/* ------------------------------------------------------------
+   5) FORMULARIOS — tinte azul suave en los campos
+   ------------------------------------------------------------ */
+html:not(.dark) .fi-input-wrp {
+    background-image: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+}
+
+html:not(.dark) .fi-input,
+html:not(.dark) .fi-select-input {
+    background-color: transparent;
+}
