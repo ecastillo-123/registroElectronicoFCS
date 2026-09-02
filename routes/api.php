@@ -15,5 +15,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/dispositivo', [DeviceController::class, 'registrar']);
 
         Route::post('/checar', [CheckInController::class, 'checar']);
+        Route::post('/checar/sync', [CheckInController::class, 'syncPending']);
     });
 });

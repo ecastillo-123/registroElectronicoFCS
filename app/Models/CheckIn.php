@@ -15,6 +15,14 @@ class CheckIn extends Model
 
     public const TIPO_SALIDA = 'salida';
 
+    public const CHECKIN_TYPE_HUELLA = 'huella';
+
+    public const CHECKIN_TYPE_FACIAL = 'facial';
+
+    public const SYNC_STATUS_NORMAL = 'normal';
+
+    public const SYNC_STATUS_PENDIENTE = 'pendiente';
+
     protected $fillable = [
         'employee_id',
         'user_id',
@@ -31,6 +39,11 @@ class CheckIn extends Model
         'validado_por',
         'validado_at',
         'nota',
+        'checkin_type',
+        'sync_status',
+        'pending_checkin_datetime',
+        'synced_at',
+        'client_uuid',
     ];
 
     protected $casts = [
@@ -42,6 +55,8 @@ class CheckIn extends Model
         'dentro_rango' => 'boolean',
         'validado' => 'boolean',
         'validado_at' => 'datetime',
+        'pending_checkin_datetime' => 'datetime',
+        'synced_at' => 'datetime',
     ];
 
     public function employee(): BelongsTo
@@ -100,6 +115,11 @@ class CheckIn extends Model
         return $query;
     }
 
+    public function scopeByClientUuid(Builder $query, string $uuid): Builder
+    {
+        return $query->where('client_uuid', $uuid);
+    }
+
     public function getEstadoLabelAttribute(): string
     {
         return match ($this->validado) {
@@ -112,5 +132,23 @@ class CheckIn extends Model
     public function getDentroRangoLabelAttribute(): string
     {
         return $this->dentro_rango ? 'Dentro' : 'Fuera';
+    }
+
+    public function getCheckinTypeLabelAttribute(): string
+    {
+        return match ($this->checkin_type) {
+            self::CHECKIN_TYPE_HUELLA => 'Huella',
+            self::CHECKIN_TYPE_FACIAL => 'Facial',
+            default => 'N/A',
+        };
+    }
+
+    public function getSyncStatusLabelAttribute(): string
+    {
+        return match ($this->sync_status) {
+            self::SYNC_STATUS_NORMAL => 'Normal',
+            self::SYNC_STATUS_PENDIENTE => 'Pendiente',
+            default => 'Normal',
+        };
     }
 }
