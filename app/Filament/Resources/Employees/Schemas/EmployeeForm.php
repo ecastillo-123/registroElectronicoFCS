@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Employees\Schemas;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -83,6 +84,27 @@ class EmployeeForm
                             ->searchable()
                             ->preload()
                             ->placeholder('Sin asignar'),
+                    ]),
+                Section::make('Horario')
+                    ->columns(2)
+                    ->collapsible()
+                    ->schema([
+                        TimePicker::make('hora_entrada')
+                            ->label('Hora de entrada')
+                            ->seconds(false)
+                            ->native(false),
+                        TimePicker::make('hora_salida')
+                            ->label('Hora de salida')
+                            ->seconds(false)
+                            ->native(false),
+                        TimePicker::make('descanso_inicio')
+                            ->label('Inicio de descanso')
+                            ->seconds(false)
+                            ->native(false),
+                        TimePicker::make('descanso_fin')
+                            ->label('Fin de descanso')
+                            ->seconds(false)
+                            ->native(false),
                     ]),
             ]);
     }

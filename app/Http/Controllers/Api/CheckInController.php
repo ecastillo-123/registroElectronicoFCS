@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\CheckIn;
 use App\Models\Device;
 use App\Models\Employee;
+use App\Services\ClasificadorHorario;
 use App\Services\GeofenceService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -95,6 +97,12 @@ class CheckInController extends Controller
                 fechaDispositivo: $data['fecha_dispositivo'] ?? null,
             );
         });
+
+        $checkIn->clasificacion_horario = ClasificadorHorario::clasificar(
+            $employee,
+            $checkIn->fecha_dispositivo ?? $checkIn->created_at,
+            $checkIn->tipo,
+        );
 
         // Update with biometric and sync info
         if (! empty($data['checkin_type'])) {
@@ -209,6 +217,12 @@ class CheckInController extends Controller
                 fechaDispositivo: $data['fecha_dispositivo'] ?? null,
             );
         });
+
+        $checkIn->clasificacion_horario = ClasificadorHorario::clasificar(
+            $employee,
+            Carbon::parse($data['pending_checkin_datetime']),
+            $checkIn->tipo,
+        );
 
         $checkIn->checkin_type = $data['checkin_type'];
         $checkIn->sync_status = CheckIn::SYNC_STATUS_PENDIENTE;

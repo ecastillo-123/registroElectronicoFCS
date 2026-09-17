@@ -82,6 +82,20 @@ class CheckInsTable
                     ->description(fn (CheckIn $record) => $record->distancia_metros !== null ? number_format((float) $record->distancia_metros, 0).' m' : null)
                     ->placeholder('—')
                     ->extraAttributes(['class' => 'text-xs']),
+                TextColumn::make('clasificacion_horario')
+                    ->label('Clasificación horario')
+                    ->badge()
+                    ->formatStateUsing(fn (CheckIn $record) => $record->clasificacion_horario_label)
+                    ->color(fn (?string $state): string => match ($state) {
+                        CheckIn::CLASIFICACION_TEMPRANO => 'info',
+                        CheckIn::CLASIFICACION_A_TIEMPO => 'success',
+                        CheckIn::CLASIFICACION_TARDE => 'danger',
+                        CheckIn::CLASIFICACION_SALIDA_TEMPRANA => 'warning',
+                        CheckIn::CLASIFICACION_SALIDA_TARDE => 'gray',
+                        CheckIn::CLASIFICACION_DESCANSO => 'info',
+                        default => 'gray',
+                    })
+                    ->extraAttributes(['class' => 'text-xs']),
                 TextColumn::make('dentro_rango')
                     ->label('¿Dentro del área?')
                     ->badge()
@@ -192,6 +206,16 @@ class CheckInsTable
                         'entrada' => 'Entrada',
                         'salida' => 'Salida',
                     ]),
+                SelectFilter::make('clasificacion_horario')
+                    ->label('Clasificación horario')
+                    ->options([
+                        CheckIn::CLASIFICACION_TEMPRANO => 'Temprano',
+                        CheckIn::CLASIFICACION_A_TIEMPO => 'A tiempo',
+                        CheckIn::CLASIFICACION_TARDE => 'Tarde',
+                        CheckIn::CLASIFICACION_SALIDA_TEMPRANA => 'Salida temprana',
+                        CheckIn::CLASIFICACION_SALIDA_TARDE => 'Salida tarde',
+                        CheckIn::CLASIFICACION_DESCANSO => 'Descanso',
+                    ]),
                 SelectFilter::make('work_center_id')
                     ->label('Centro de trabajo')
                     ->relationship('workCenter', 'nombre')
@@ -228,11 +252,19 @@ class CheckInsTable
             ->requiresConfirmation()
             ->modalHeading('Aprobar checada')
             ->modalDescription('¿Confirmas la aprobación de esta checada?')
-            ->action(function (CheckIn $record): void {
+            ->form([
+                Textarea::make('nota')
+                    ->label('Nota (opcional)')
+                    ->placeholder('Observaciones de la aprobación')
+                    ->maxLength(500)
+                    ->columnSpanFull(),
+            ])
+            ->action(function (CheckIn $record, array $data): void {
                 $record->update([
                     'validado' => true,
                     'validado_por' => Auth::id(),
                     'validado_at' => now(),
+                    'nota' => filled($data['nota'] ?? null) ? $data['nota'] : $record->nota,
                 ]);
             })
             ->after(fn () => Notification::make()->title('Checada aprobada')->success()->send());

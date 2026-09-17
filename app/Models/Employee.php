@@ -29,6 +29,10 @@ class Employee extends Model
         'device_id',
         'aviso_privacidad_aceptado',
         'aviso_privacidad_aceptado_at',
+        'hora_entrada',
+        'hora_salida',
+        'descanso_inicio',
+        'descanso_fin',
     ];
 
     protected $casts = [

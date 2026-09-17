@@ -23,6 +23,18 @@ class CheckIn extends Model
 
     public const SYNC_STATUS_PENDIENTE = 'pendiente';
 
+    public const CLASIFICACION_TEMPRANO = 'temprano';
+
+    public const CLASIFICACION_A_TIEMPO = 'a_tiempo';
+
+    public const CLASIFICACION_TARDE = 'tarde';
+
+    public const CLASIFICACION_SALIDA_TEMPRANA = 'salida_temprana';
+
+    public const CLASIFICACION_SALIDA_TARDE = 'salida_tarde';
+
+    public const CLASIFICACION_DESCANSO = 'descanso';
+
     protected $fillable = [
         'employee_id',
         'user_id',
@@ -44,6 +56,7 @@ class CheckIn extends Model
         'pending_checkin_datetime',
         'synced_at',
         'client_uuid',
+        'clasificacion_horario',
     ];
 
     protected $casts = [
@@ -149,6 +162,19 @@ class CheckIn extends Model
             self::SYNC_STATUS_NORMAL => 'Normal',
             self::SYNC_STATUS_PENDIENTE => 'Pendiente',
             default => 'Normal',
+        };
+    }
+
+    public function getClasificacionHorarioLabelAttribute(): string
+    {
+        return match ($this->clasificacion_horario) {
+            self::CLASIFICACION_TEMPRANO => 'Temprano',
+            self::CLASIFICACION_A_TIEMPO => 'A tiempo',
+            self::CLASIFICACION_TARDE => 'Tarde',
+            self::CLASIFICACION_SALIDA_TEMPRANA => 'Salida temprana',
+            self::CLASIFICACION_SALIDA_TARDE => 'Salida tarde',
+            self::CLASIFICACION_DESCANSO => 'Descanso',
+            default => 'Sin horario',
         };
     }
 }
