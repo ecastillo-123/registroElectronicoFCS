@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Employee extends Model
 {
@@ -33,6 +34,11 @@ class Employee extends Model
         'hora_salida',
         'descanso_inicio',
         'descanso_fin',
+        'shift_id',
+        'fecha_ingreso',
+        'fecha_baja',
+        'estado_laboral',
+        'departamento',
     ];
 
     protected $casts = [
@@ -40,6 +46,8 @@ class Employee extends Model
         'fecha_activacion' => 'date',
         'aviso_privacidad_aceptado' => 'boolean',
         'aviso_privacidad_aceptado_at' => 'datetime',
+        'fecha_ingreso' => 'date',
+        'fecha_baja' => 'date',
     ];
 
     public function workCenter(): BelongsTo
@@ -60,6 +68,31 @@ class Employee extends Model
     public function checkIns(): HasMany
     {
         return $this->hasMany(CheckIn::class);
+    }
+
+    public function shift(): BelongsTo
+    {
+        return $this->belongsTo(Shift::class);
+    }
+
+    public function incidents(): HasMany
+    {
+        return $this->hasMany(Incident::class);
+    }
+
+    public function correctionRequests(): HasMany
+    {
+        return $this->hasMany(CorrectionRequest::class);
+    }
+
+    public function workdayCalculations(): HasMany
+    {
+        return $this->hasMany(WorkdayCalculation::class);
+    }
+
+    public function evidences(): MorphMany
+    {
+        return $this->morphMany(Evidence::class, 'evidenciable');
     }
 
     public function getNombreCompletoAttribute(): string

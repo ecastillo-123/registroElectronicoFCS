@@ -26,11 +26,11 @@ class RoleForm
                             ->label('Permisos')
                             ->relationship('permissions', 'name')
                             ->columns(2)
-                            ->descriptions(fn (Permission $permission) => match ($permission->name) {
-                                'ver_checadas' => 'Consultar el área de revisión de checadas.',
-                                'validar_checadas' => 'Aprobar o rechazar checadas.',
-                                'gestionar_centros' => 'Crear y editar centros de trabajo.',
-                                'gestionar_empresas' => 'Crear y editar empresas.',
+                            ->getOptionDescriptionFromRecordUsing(fn (Permission $permission): ?string => match ($permission->name) {
+                                'ver_checadas' => 'Consultar el área de registros de jornada.',
+                                'validar_checadas' => 'Aprobar o rechazar registros.',
+                                'gestionar_centros' => 'Crear y editar centros de trabajo / sucursales.',
+                                'gestionar_empresas' => 'Crear y editar cooperativas.',
                                 'gestionar_empleados' => 'Crear y editar empleados.',
                                 'gestionar_usuarios' => 'Crear y editar usuarios del sistema.',
                                 'gestionar_roles' => 'Administrar roles y permisos.',

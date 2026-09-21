@@ -23,11 +23,11 @@ class CompanyResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Catálogos';
 
-    protected static ?string $navigationLabel = 'Empresas';
+    protected static ?string $navigationLabel = 'Cooperativa';
 
-    protected static ?string $modelLabel = 'Empresa';
+    protected static ?string $modelLabel = 'Cooperativa';
 
-    protected static ?string $pluralModelLabel = 'Empresas';
+    protected static ?string $pluralModelLabel = 'Cooperativa';
 
     public static function canViewAny(): bool
     {
@@ -38,7 +38,7 @@ class CompanyResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('Datos de la empresa')
+                Section::make('Datos de la cooperativa')
                     ->columns(2)
                     ->schema([
                         TextInput::make('nombre')
@@ -64,7 +64,7 @@ class CompanyResource extends Resource
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('work_centers_count')
-                    ->label('Centros de trabajo')
+                    ->label('Centros de trabajo / Sucursales')
                     ->counts('workCenters')
                     ->sortable(),
             ]);

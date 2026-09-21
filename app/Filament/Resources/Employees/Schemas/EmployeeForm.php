@@ -73,6 +73,30 @@ class EmployeeForm
                             ->label('Área')
                             ->maxLength(150)
                             ->placeholder('Ej. Línea 1'),
+                        TextInput::make('departamento')
+                            ->label('Departamento')
+                            ->maxLength(150),
+                        DatePicker::make('fecha_ingreso')
+                            ->label('Fecha de ingreso')
+                            ->native(false),
+                        DatePicker::make('fecha_baja')
+                            ->label('Fecha de baja')
+                            ->native(false),
+                        Select::make('estado_laboral')
+                            ->label('Estado laboral')
+                            ->options([
+                                'activo' => 'Activo',
+                                'inactivo' => 'Inactivo',
+                                'licencia' => 'En licencia',
+                            ])
+                            ->default('activo')
+                            ->required(),
+                        Select::make('shift_id')
+                            ->label('Jornada')
+                            ->relationship('shift', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Usar horario individual'),
                         TextInput::make('horario_asignado')
                             ->label('Horario asignado')
                             ->maxLength(150)

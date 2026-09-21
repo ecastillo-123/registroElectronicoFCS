@@ -8,6 +8,7 @@ use App\Models\Device;
 use App\Models\Employee;
 use App\Services\ClasificadorHorario;
 use App\Services\GeofenceService;
+use App\Services\AuditService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -85,34 +86,40 @@ class CheckInController extends Controller
 
         $device = $this->resolveDevice($user, $data['device'] ?? []);
 
-        $checkIn = DB::transaction(function () use ($employee, $user, $device, $data) {
-            return $this->geofence->registrar(
-                employee: $employee,
-                userId: $user->id,
-                device: $device,
-                tipo: $data['tipo'],
-                lat: (float) $data['lat'],
-                lng: (float) $data['lng'],
-                precisionMetros: isset($data['precision_metros']) ? (float) $data['precision_metros'] : null,
-                fechaDispositivo: $data['fecha_dispositivo'] ?? null,
+        $checkIn = AuditService::withoutGenericEvents(function () use ($employee, $user, $device, $data) {
+            $checkIn = DB::transaction(function () use ($employee, $user, $device, $data) {
+                return $this->geofence->registrar(
+                    employee: $employee,
+                    userId: $user->id,
+                    device: $device,
+                    tipo: $data['tipo'],
+                    lat: (float) $data['lat'],
+                    lng: (float) $data['lng'],
+                    precisionMetros: isset($data['precision_metros']) ? (float) $data['precision_metros'] : null,
+                    fechaDispositivo: $data['fecha_dispositivo'] ?? null,
+                );
+            });
+
+            $checkIn->clasificacion_horario = ClasificadorHorario::clasificar(
+                $employee,
+                $checkIn->fecha_dispositivo ?? $checkIn->created_at,
+                $checkIn->tipo,
             );
+
+            // Update with biometric and sync info
+            if (! empty($data['checkin_type'])) {
+                $checkIn->checkin_type = $data['checkin_type'];
+            }
+            $checkIn->sync_status = CheckIn::SYNC_STATUS_NORMAL;
+            if (! empty($data['client_uuid'])) {
+                $checkIn->client_uuid = $data['client_uuid'];
+            }
+            $checkIn->save();
+
+            return $checkIn;
         });
 
-        $checkIn->clasificacion_horario = ClasificadorHorario::clasificar(
-            $employee,
-            $checkIn->fecha_dispositivo ?? $checkIn->created_at,
-            $checkIn->tipo,
-        );
-
-        // Update with biometric and sync info
-        if (! empty($data['checkin_type'])) {
-            $checkIn->checkin_type = $data['checkin_type'];
-        }
-        $checkIn->sync_status = CheckIn::SYNC_STATUS_NORMAL;
-        if (! empty($data['client_uuid'])) {
-            $checkIn->client_uuid = $data['client_uuid'];
-        }
-        $checkIn->save();
+        AuditService::append('created', 'CheckIn', $checkIn->id, ['current' => $checkIn->toArray()]);
 
         $workCenter = $checkIn->workCenter;
 
@@ -205,31 +212,37 @@ class CheckInController extends Controller
 
         $device = $this->resolveDevice($user, $data['device'] ?? []);
 
-        $checkIn = DB::transaction(function () use ($employee, $user, $device, $data) {
-            return $this->geofence->registrar(
-                employee: $employee,
-                userId: $user->id,
-                device: $device,
-                tipo: $data['tipo'],
-                lat: (float) $data['lat'],
-                lng: (float) $data['lng'],
-                precisionMetros: isset($data['precision_metros']) ? (float) $data['precision_metros'] : null,
-                fechaDispositivo: $data['fecha_dispositivo'] ?? null,
+        $checkIn = AuditService::withoutGenericEvents(function () use ($employee, $user, $device, $data) {
+            $checkIn = DB::transaction(function () use ($employee, $user, $device, $data) {
+                return $this->geofence->registrar(
+                    employee: $employee,
+                    userId: $user->id,
+                    device: $device,
+                    tipo: $data['tipo'],
+                    lat: (float) $data['lat'],
+                    lng: (float) $data['lng'],
+                    precisionMetros: isset($data['precision_metros']) ? (float) $data['precision_metros'] : null,
+                    fechaDispositivo: $data['fecha_dispositivo'] ?? null,
+                );
+            });
+
+            $checkIn->clasificacion_horario = ClasificadorHorario::clasificar(
+                $employee,
+                Carbon::parse($data['pending_checkin_datetime']),
+                $checkIn->tipo,
             );
+
+            $checkIn->checkin_type = $data['checkin_type'];
+            $checkIn->sync_status = CheckIn::SYNC_STATUS_PENDIENTE;
+            $checkIn->pending_checkin_datetime = $data['pending_checkin_datetime'];
+            $checkIn->synced_at = now();
+            $checkIn->client_uuid = $data['client_uuid'];
+            $checkIn->save();
+
+            return $checkIn;
         });
 
-        $checkIn->clasificacion_horario = ClasificadorHorario::clasificar(
-            $employee,
-            Carbon::parse($data['pending_checkin_datetime']),
-            $checkIn->tipo,
-        );
-
-        $checkIn->checkin_type = $data['checkin_type'];
-        $checkIn->sync_status = CheckIn::SYNC_STATUS_PENDIENTE;
-        $checkIn->pending_checkin_datetime = $data['pending_checkin_datetime'];
-        $checkIn->synced_at = now();
-        $checkIn->client_uuid = $data['client_uuid'];
-        $checkIn->save();
+        AuditService::append('created', 'CheckIn', $checkIn->id, ['current' => $checkIn->toArray()]);
 
         $workCenter = $checkIn->workCenter;
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CheckIn extends Model
 {
@@ -90,6 +91,11 @@ class CheckIn extends Model
     public function workCenter(): BelongsTo
     {
         return $this->belongsTo(WorkCenter::class);
+    }
+
+    public function effect(): HasOne
+    {
+        return $this->hasOne(AttendanceCorrectionEffect::class);
     }
 
     public function validator(): BelongsTo

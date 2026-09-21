@@ -21,6 +21,13 @@ class DatabaseSeeder extends Seeder
             'gestionar_empleados',
             'gestionar_usuarios',
             'gestionar_roles',
+            'gestionar_jornadas',
+            'gestionar_calendario',
+            'gestionar_reglas',
+            'gestionar_incidencias',
+            'gestionar_correcciones',
+            'ver_auditoria',
+            'ver_reportes',
         ];
 
         foreach ($permisos as $permiso) {
@@ -32,7 +39,7 @@ class DatabaseSeeder extends Seeder
         $consulta = Role::firstOrCreate(['name' => 'consulta']);
 
         $admin->syncPermissions($permisos);
-        $revisor->syncPermissions(['ver_checadas', 'validar_checadas']);
+        $revisor->syncPermissions(['ver_checadas', 'validar_checadas', 'gestionar_incidencias', 'gestionar_correcciones', 'ver_reportes']);
         $consulta->syncPermissions(['ver_checadas']);
 
         $centro = WorkCenter::firstOrCreate(

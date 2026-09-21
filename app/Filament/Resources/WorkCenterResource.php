@@ -25,11 +25,11 @@ class WorkCenterResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Catálogos';
 
-    protected static ?string $navigationLabel = 'Centros de Trabajo';
+    protected static ?string $navigationLabel = 'Centros de Trabajo / Sucursales';
 
-    protected static ?string $modelLabel = 'Centro de Trabajo';
+    protected static ?string $modelLabel = 'Centro de Trabajo / Sucursal';
 
-    protected static ?string $pluralModelLabel = 'Centros de Trabajo';
+    protected static ?string $pluralModelLabel = 'Centros de Trabajo / Sucursales';
 
     public static function canViewAny(): bool
     {
@@ -72,12 +72,12 @@ class WorkCenterResource extends Resource
                     ->columns(2)
                     ->schema([
                         Select::make('company_id')
-                            ->label('Empresa')
+                            ->label('Cooperativa')
                             ->relationship('company', 'nombre')
                             ->searchable()
                             ->preload()
                             ->required()
-                            ->placeholder('Selecciona una empresa'),
+                            ->placeholder('Selecciona una cooperativa'),
                         TextInput::make('nombre')
                             ->label('Nombre')
                             ->required()
@@ -123,7 +123,7 @@ class WorkCenterResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('company.nombre')
-                    ->label('Empresa')
+                    ->label('Cooperativa')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('nombre')

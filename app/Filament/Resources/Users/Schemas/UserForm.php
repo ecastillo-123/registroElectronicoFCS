@@ -9,6 +9,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
 
 class UserForm
 {
@@ -46,7 +47,9 @@ class UserForm
                             ->searchable()
                             ->preload()
                             ->multiple()
-                            ->default(['consulta']),
+                            ->default(fn (): array => array_filter([
+                                Role::query()->where('name', 'consulta')->value('id'),
+                            ])),
                         Toggle::make('is_active')
                             ->label('Usuario activo')
                             ->default(true),
