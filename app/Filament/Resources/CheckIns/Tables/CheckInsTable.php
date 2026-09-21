@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CheckIns\Tables;
 
 use App\Models\CheckIn;
+use App\Services\AuditService;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
@@ -52,7 +53,7 @@ class CheckInsTable
                     ->description(fn (CheckIn $record) => $record->user?->email)
                     ->extraAttributes(['class' => 'text-xs']),
                 TextColumn::make('workCenter.company.nombre')
-                    ->label('Empresa')
+                    ->label('Cooperativa')
                     ->placeholder('—')
                     ->limit(20)
                     ->tooltip(fn (CheckIn $record) => $record->workCenter?->company?->nombre)
@@ -250,8 +251,8 @@ class CheckInsTable
             ->color('success')
             ->visible(fn (): bool => Auth::user()?->can('validar_checadas') ?? false)
             ->requiresConfirmation()
-            ->modalHeading('Aprobar checada')
-            ->modalDescription('¿Confirmas la aprobación de esta checada?')
+            ->modalHeading('Aprobar registro')
+                ->modalDescription('¿Confirmas la aprobación de este registro?')
             ->form([
                 Textarea::make('nota')
                     ->label('Nota (opcional)')
@@ -260,14 +261,22 @@ class CheckInsTable
                     ->columnSpanFull(),
             ])
             ->action(function (CheckIn $record, array $data): void {
-                $record->update([
+                $wasValidado = $record->validado;
+
+                AuditService::withoutGenericEvents(fn () => $record->update([
                     'validado' => true,
                     'validado_por' => Auth::id(),
                     'validado_at' => now(),
                     'nota' => filled($data['nota'] ?? null) ? $data['nota'] : $record->nota,
+                ]));
+
+                AuditService::append('validated', 'CheckIn', $record->id, [
+                    'previous' => ['validado' => $wasValidado],
+                    'current' => ['validado' => true],
+                    'reason' => $data['nota'] ?? null,
                 ]);
             })
-            ->after(fn () => Notification::make()->title('Checada aprobada')->success()->send());
+            ->after(fn () => Notification::make()->title('Registro aprobado')->success()->send());
     }
 
     private static function rechazarAction(): Action
@@ -278,7 +287,7 @@ class CheckInsTable
             ->color('danger')
             ->visible(fn (): bool => Auth::user()?->can('validar_checadas') ?? false)
             ->requiresConfirmation()
-            ->modalHeading('Rechazar checada')
+            ->modalHeading('Rechazar registro')
             ->modalDescription('Indica el motivo del rechazo.')
             ->form([
                 Textarea::make('nota')
@@ -288,13 +297,21 @@ class CheckInsTable
                     ->columnSpanFull(),
             ])
             ->action(function (CheckIn $record, array $data): void {
-                $record->update([
+                $wasValidado = $record->validado;
+
+                AuditService::withoutGenericEvents(fn () => $record->update([
                     'validado' => false,
                     'validado_por' => Auth::id(),
                     'validado_at' => now(),
                     'nota' => $data['nota'] ?? null,
+                ]));
+
+                AuditService::append('rejected', 'CheckIn', $record->id, [
+                    'previous' => ['validado' => $wasValidado],
+                    'current' => ['validado' => false],
+                    'reason' => $data['nota'] ?? null,
                 ]);
             })
-            ->after(fn () => Notification::make()->title('Checada rechazada')->danger()->send());
+            ->after(fn () => Notification::make()->title('Registro rechazado')->danger()->send());
     }
 }

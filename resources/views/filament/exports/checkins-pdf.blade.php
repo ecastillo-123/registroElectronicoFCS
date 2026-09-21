@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Reporte de Checadas</title>
+    <title>Reporte de Registros de Jornada</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -55,8 +55,8 @@
     </style>
 </head>
 <body>
-    <h1>Reporte de Checadas</h1>
-    <div class="subtitulo">Generado el {{ $generado_en->format('d/m/Y H:i') }} · Total: {{ $records->count() }} checada(s)</div>
+    <h1>Reporte de Registros de Jornada</h1>
+    <div class="subtitulo">Generado el {{ $generado_en->format('d/m/Y H:i') }} · Total: {{ $records->count() }} registro(s)</div>
 
     <div class="filtros">
         @if ($filtros['desde'] || $filtros['hasta'])
@@ -118,7 +118,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="14" class="vacio">No se encontraron checadas con los criterios indicados.</td>
+                    <td colspan="14" class="vacio">No se encontraron registros con los criterios indicados.</td>
                 </tr>
             @endforelse
         </tbody>

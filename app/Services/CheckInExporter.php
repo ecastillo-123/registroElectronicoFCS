@@ -32,7 +32,7 @@ class CheckInExporter
      */
     public static function excel(Collection $records, array $tableFilters): Response
     {
-        $tmp = tempnam(sys_get_temp_dir(), 'checadas_').'.xlsx';
+        $tmp = tempnam(sys_get_temp_dir(), 'registros_').'.xlsx';
 
         $writer = new Writer(new Options);
         $writer->openToFile($tmp);
@@ -83,7 +83,7 @@ class CheckInExporter
 
         $writer->close();
 
-        return response()->download($tmp, 'checadas_'.now()->format('Ymd_His').'.xlsx')->deleteFileAfterSend();
+        return response()->download($tmp, 'registros_'.now()->format('Ymd_His').'.xlsx')->deleteFileAfterSend();
     }
 
     /**
@@ -101,7 +101,7 @@ class CheckInExporter
             ->setPaper('letter', 'landscape')
             ->output();
 
-        $filename = 'checadas_'.now()->format('Ymd_His').'.pdf';
+        $filename = 'registros_'.now()->format('Ymd_His').'.pdf';
 
         return response()->streamDownload(function () use ($pdf): void {
             echo $pdf;

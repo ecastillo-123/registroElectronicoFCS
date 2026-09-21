@@ -536,7 +536,7 @@ class AdminPanelTest extends TestCase
 
         $excel = CheckInExporter::excel($records, []);
         $this->assertEquals(200, $excel->getStatusCode());
-        $this->assertStringContainsString('checadas_', (string) $excel->headers->get('content-disposition'));
+        $this->assertStringContainsString('registros_', (string) $excel->headers->get('content-disposition'));
 
         $pdf = CheckInExporter::pdf($records, [
             'rango_fechas' => ['desde' => null, 'hasta' => null],
@@ -544,6 +544,7 @@ class AdminPanelTest extends TestCase
         $this->assertInstanceOf(StreamedResponse::class, $pdf);
         $this->assertStringContainsString('application/pdf', $pdf->headers->get('content-type'));
         $this->assertStringContainsString('attachment', (string) $pdf->headers->get('content-disposition'));
+        $this->assertStringContainsString('registros_', (string) $pdf->headers->get('content-disposition'));
 
         ob_start();
         $pdf->sendContent();

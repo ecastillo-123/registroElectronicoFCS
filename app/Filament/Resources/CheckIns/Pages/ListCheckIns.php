@@ -12,6 +12,8 @@ class ListCheckIns extends ListRecords
 {
     protected static string $resource = CheckInResource::class;
 
+    protected static ?string $title = 'Registros de Jornada';
+
     protected function getHeaderActions(): array
     {
         return [

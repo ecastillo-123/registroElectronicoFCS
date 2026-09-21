@@ -22,7 +22,7 @@ class ReclasificarCheckIns extends Command
      *
      * @var string
      */
-    protected $description = 'Reclasifica las checadas históricas según el horario de cada empleado';
+    protected $description = 'Reclasifica los registros históricos según el horario de cada empleado';
 
     /**
      * Execute the console command.

@@ -24,11 +24,11 @@ class CheckInResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Operación';
 
-    protected static ?string $navigationLabel = 'Revisión de Checadas';
+    protected static ?string $navigationLabel = 'Registros';
 
-    protected static ?string $modelLabel = 'Checada';
+    protected static ?string $modelLabel = 'Registro';
 
-    protected static ?string $pluralModelLabel = 'Checadas';
+    protected static ?string $pluralModelLabel = 'Registros';
 
     public static function canViewAny(): bool
     {
@@ -54,7 +54,7 @@ class CheckInResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('Checada')
+                Section::make('Registro')
                     ->columns(2)
                     ->schema([
                         TextEntry::make('created_at')
