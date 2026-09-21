@@ -14,7 +14,7 @@ class LatestCheckIns extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->heading('Últimas checadas')
+            ->heading('Últimos registros')
             ->query(
                 CheckIn::query()
                     ->visibleTo(auth()->user())

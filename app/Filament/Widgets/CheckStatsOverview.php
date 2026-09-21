@@ -16,7 +16,7 @@ class CheckStatsOverview extends StatsOverviewWidget
         $checkIns = CheckIn::query()->visibleTo($user);
 
         $stats = [
-            Stat::make('Checadas de hoy', (clone $checkIns)->whereDate('created_at', today())->count())
+            Stat::make('Registros de hoy', (clone $checkIns)->whereDate('created_at', today())->count())
                 ->description('Registros de entrada y salida')
                 ->descriptionIcon('heroicon-m-clipboard-document-check')
                 ->color('primary'),
@@ -25,7 +25,7 @@ class CheckStatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
             Stat::make('Dentro del área (hoy)', (clone $checkIns)->whereDate('created_at', today())->where('dentro_rango', true)->count())
-                ->description('Checadas en rango válido')
+                ->description('Registros en rango válido')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success'),
         ];

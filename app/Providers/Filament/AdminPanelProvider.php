@@ -8,7 +8,7 @@ use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages\Dashboard;
+use App\Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -38,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 NavigationGroup::make('Operación'),
+                NavigationGroup::make('Reportes'),
                 NavigationGroup::make('Catálogos'),
                 NavigationGroup::make('Sistema'),
             ])
@@ -52,7 +53,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 PanelsRenderHook::STYLES_AFTER,
-                fn (): HtmlString => new HtmlString('<link rel="stylesheet" href="' . asset('css/checador-admin.css') . '" />'),
+                fn (): HtmlString => new HtmlString(
+                    '<link rel="stylesheet" href="' . asset('css/checador-admin.css') . '?v=' . filemtime(public_path('css/checador-admin.css')) . '" />'
+                ),
             )
             ->renderHook(
                 PanelsRenderHook::STYLES_AFTER,

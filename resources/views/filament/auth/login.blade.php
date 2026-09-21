@@ -413,7 +413,7 @@
 
                 <div class="fi-login-brand-name">{!! $brandName !!}</div>
                 <p class="fi-login-brand-tagline">
-                    Checadas de entrada y salida del personal, con ubicación verificada y control en tiempo real.
+                    Registros de entrada y salida del personal, con ubicación verificada y control en tiempo real.
                 </p>
 
                 <div
